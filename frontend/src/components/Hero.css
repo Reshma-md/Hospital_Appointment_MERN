@@ -1,0 +1,13 @@
+.hero .banner h1 {
+  margin-bottom: 0; /* Remove bottom margin from the title */
+}
+
+.hero .banner h3 {
+  margin-top: 0; /* Remove top margin from the subtitle */
+}
+
+.hero-subtitle {
+  font-size: 2rem; /* Increased subtitle size */
+  color: #34495e; /* Optional: Keep the existing color */
+  margin-top: 0; /* Ensure no extra margin above */
+}
