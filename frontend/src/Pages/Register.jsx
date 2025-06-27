@@ -11,63 +11,35 @@ const Register = () => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [otp, setOtp] = useState("");
+  const [nic, setNic] = useState("");
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("");
   const [password, setPassword] = useState("");
-  const [otpVerified, setOtpVerified] = useState(false); // OTP verification state
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const navigateTo = useNavigate();
-
-  // Function to send OTP
-  const sendOtp = async () => {
-    if (phone.length !== 10) {
-      toast.error("Phone number must be 10 digits.");
-      return;
-    }
-
-    try {
-      await axios.post("http://localhost:5000/api/v1/auth/send-otp", { phone });
-      toast.success("OTP sent successfully!");
-    } catch (error) {
-      toast.error("Failed to send OTP. Try again.");
-    }
-  };
-
-  // Function to verify OTP
-  const verifyOtp = async () => {
-    try {
-      const { data } = await axios.post("http://localhost:5000/api/v1/auth/verify-otp", { phone, otp });
-      if (data.success) {
-        setOtpVerified(true);
-        toast.success("OTP verified successfully!");
-      } else {
-        toast.error("Invalid OTP.");
-      }
-    } catch (error) {
-      toast.error("OTP verification failed.");
-    }
-  };
 
   // Function to handle registration
   const handleRegistration = async (e) => {
     e.preventDefault();
 
-    if (!otpVerified) {
-      toast.error("Please verify OTP before registration.");
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match!");
       return;
     }
 
     try {
-      await axios.post("http://localhost:5000/api/v1/user/register", {
-        firstName, lastName, email, phone, dob, gender, password
+      await axios.post("http://localhost:5000/api/v1/user/patient/register", {
+        firstName, lastName, email, phone, nic, dob, gender, password
       });
 
       toast.success("Registration successful!");
       setIsAuthenticated(true);
       navigateTo("/");
     } catch (error) {
-      toast.error("Registration failed. Please try again.");
+      toast.error(
+        error.response?.data?.message || "Registration failed. Please try again."
+      );
     }
   };
 
@@ -76,21 +48,18 @@ const Register = () => {
   return (
     <div className="container form-component register-form">
       <h2>Sign Up</h2>
-      <form onSubmit={handleRegistration}>
+      <form onSubmit={handleRegistration} className="register-form-narrow">
         <input type="text" placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
         <input type="text" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
         <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-
-        <div>
-          <input type="number" placeholder="Phone Number" value={phone} onChange={(e) => setPhone(e.target.value)} />
-          <button type="button" onClick={sendOtp}>Send OTP</button>
-        </div>
-
-        <div>
-          <input type="text" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} />
-          <button type="button" onClick={verifyOtp}>Verify OTP</button>
-        </div>
-
+        <input type="number" placeholder="Phone Number" value={phone} onChange={(e) => setPhone(e.target.value)} />
+        <input
+          type="text"
+          placeholder="Aadhar"
+          value={nic}
+          onChange={(e) => setNic(e.target.value)}
+          maxLength={12}
+        />
         <input type="date" placeholder="Date of Birth" value={dob} onChange={(e) => setDob(e.target.value)} />
         <select value={gender} onChange={(e) => setGender(e.target.value)}>
           <option value="">Select Gender</option>
@@ -98,10 +67,14 @@ const Register = () => {
           <option value="Female">Female</option>
         </select>
         <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-
-        <button type="submit" disabled={!otpVerified}>Register</button>
+        <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <button type="submit">Register</button>
+        </div>
       </form>
-      <p>Already registered? <Link to="/signin">Login Now</Link></p>
+      <p style={{ textAlign: "right", marginTop: "16px", paddingRight: "100px" }}>
+        Already registered? <Link to="/signin">Login Now</Link>
+      </p>
     </div>
   );
 };

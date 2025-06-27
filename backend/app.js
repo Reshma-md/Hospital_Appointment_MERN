@@ -53,4 +53,10 @@ app.use("/api/v1/appointment", appointmentRouter);
 // ✅ Global Error Middleware
 app.use(errorMiddleware);
 
+app.use((req, res, next) => {
+  console.log(`[${req.method}] ${req.originalUrl}`);
+  next();
+});
+
+
 export default app;

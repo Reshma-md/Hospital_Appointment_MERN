@@ -13,8 +13,8 @@ import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const [show, setShow] = useState(false);
-
   const { isAuthenticated, setIsAuthenticated } = useContext(Context);
+  const navigateTo = useNavigate();
 
   const handleLogout = async () => {
     await axios
@@ -29,8 +29,6 @@ const Sidebar = () => {
         toast.error(err.response.data.message);
       });
   };
-
-  const navigateTo = useNavigate();
 
   const gotoHomePage = () => {
     navigateTo("/");
@@ -68,12 +66,20 @@ const Sidebar = () => {
           <RiLogoutBoxFill onClick={handleLogout} />
         </div>
       </nav>
+
       <div
         className="wrapper"
         style={!isAuthenticated ? { display: "none" } : { display: "flex" }}
       >
         <GiHamburgerMenu className="hamburger" onClick={() => setShow(!show)} />
       </div>
+
+      {isAuthenticated && (
+        <div className="welcome-message">
+          <h1>Welcome to the Admin Dashboard</h1>
+          <p>Select an option from the sidebar to manage your panel.</p>
+        </div>
+      )}
     </>
   );
 };

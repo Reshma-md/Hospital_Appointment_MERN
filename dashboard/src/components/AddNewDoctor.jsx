@@ -126,7 +126,7 @@ const AddNewDoctor = () => {
               />
               <input
                 type="number"
-                placeholder="NIC"
+                placeholder="Aadhar Number"
                 value={nic}
                 onChange={(e) => setNic(e.target.value)}
               />

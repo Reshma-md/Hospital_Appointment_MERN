@@ -122,10 +122,11 @@ const AppointmentForm = () => {
           </div>
           <div>
             <input
-              type="number"
-              placeholder="NIC"
+              type="text"
+              placeholder="Aadhar"
               value={nic}
               onChange={(e) => setNic(e.target.value)}
+              maxLength={12}
             />
             <input
               type="date"

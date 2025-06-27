@@ -11,6 +11,12 @@ const MessageForm = () => {
 
   const handleMessage = async (e) => {
     e.preventDefault();
+
+    if (phone.length !== 10) {
+      toast.error("Phone number must be exactly 10 digits.");
+      return;
+    }
+
     try {
       await axios
         .post(
